@@ -2,11 +2,19 @@ package com.samseen.book_store_application.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import jakarta.validation.constraints.Min;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Data transfer object for sales
  */
 
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class SalesDto {
 
     //book id

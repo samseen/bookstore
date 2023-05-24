@@ -6,12 +6,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface BookRepository extends JpaRepository<Book, Long> {
 
     @Query(value = "SELECT * FROM book b WHERE " +
                 "(b.title LIKE %?1% OR CAST(b.id AS CHAR) LIKE %?1% OR LOWER(b.author) LIKE %?1%) " +
                 "AND b.category=?2", nativeQuery = true)
-    Page<Book> findAllBookByCategoryAndKeyword(String keyword, int category, Pageable pageable);
+    List<Book> findAllBookByCategoryAndKeyword(String keyword, int category);
 
     @Query(value = "SELECT IF(SUM(b.sold) IS NULL, 0, SUM(b.sold)) FROM book b WHERE " +
             "(b.title LIKE %?1% OR CAST(b.id AS CHAR) LIKE %?1% OR LOWER(b.author) LIKE %?1%) " +
