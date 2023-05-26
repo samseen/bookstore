@@ -1,8 +1,7 @@
 package com.samseen.book_store_application.entity;
 
 import com.samseen.book_store_application.utils.Category;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -24,6 +23,8 @@ public class Book {
      * Eg: ISBN number
      */
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
     /**
@@ -41,6 +42,7 @@ public class Book {
      * category of the book
      * Eg: Novel, Fiction, etc
      */
+    @Enumerated(EnumType.STRING)
     private Category category;
 
     /**
@@ -53,6 +55,7 @@ public class Book {
      * Amount of book available
      */
     @Min(value = 0, message = "Total Count should be positive value.")
+    @Column(name = "total_count")
     private int totalCount;
 
     /**
