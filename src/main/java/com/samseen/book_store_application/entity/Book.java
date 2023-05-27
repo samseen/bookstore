@@ -55,7 +55,6 @@ public class Book {
      * Amount of book available
      */
     @Min(value = 0, message = "Total Count should be positive value.")
-    @Column(name = "total_count")
     private int totalCount;
 
     /**
