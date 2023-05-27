@@ -1,5 +1,6 @@
 package com.samseen.book_store_application.service;
 
+import com.samseen.book_store_application.core.response.Result;
 import com.samseen.book_store_application.dto.BookDto;
 import com.samseen.book_store_application.dto.SalesDto;
 import com.samseen.book_store_application.utils.Category;
@@ -7,13 +8,13 @@ import com.samseen.book_store_application.utils.Category;
 import java.util.List;
 
 public interface BookStoreService {
-    void addNewBook(BookDto bookDto);
+    Result<BookDto> addNewBook(BookDto bookDto);
 
-    void addBook(Long id, int quantityToAdd);
+    Result<BookDto> addBook(Long id, int quantityToAdd);
 
-    BookDto getBookById(Long id);
+    Result<BookDto> getBookById(Long id);
 
-    List<BookDto> getAllBooks();
+    Result<List<BookDto>> getAllBooks();
 
     int getNumberOfBooksById(Long id);
 

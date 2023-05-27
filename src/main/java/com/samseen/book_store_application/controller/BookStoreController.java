@@ -1,5 +1,6 @@
 package com.samseen.book_store_application.controller;
 
+import com.samseen.book_store_application.core.response.Result;
 import com.samseen.book_store_application.dto.BookDto;
 import com.samseen.book_store_application.dto.SalesDto;
 import com.samseen.book_store_application.service.BookStoreService;
@@ -46,8 +47,8 @@ public class BookStoreController {
     @ApiOperation(value = "Add New Book")
     @PostMapping("/add-new-book")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addNewBook(@Valid @RequestBody BookDto bookDto) {
-        bookStoreService.addNewBook(bookDto);
+    public Result<BookDto> addNewBook(@Valid @RequestBody BookDto bookDto) {
+        return this.bookStoreService.addNewBook(bookDto);
     }
 
     /**
@@ -60,9 +61,9 @@ public class BookStoreController {
     @ApiOperation(value = "Add books")
     @PutMapping("/add-book/{id}/{quantityToAdd}")
     @ResponseStatus(HttpStatus.OK)
-    public void addBook(@PathVariable Long id,
+    public Result<BookDto> addBook(@PathVariable Long id,
                         @PathVariable int quantityToAdd) {
-        bookStoreService.addBook(id, quantityToAdd);
+        return this.bookStoreService.addBook(id, quantityToAdd);
     }
 
     /**
@@ -73,8 +74,8 @@ public class BookStoreController {
      */
     @ApiOperation(value = "Get Book By Id")
     @GetMapping("/book/{id}")
-    public BookDto getBookById(@PathVariable Long id) {
-        return bookStoreService.getBookById(id);
+    public Result<BookDto> getBookById(@PathVariable Long id) {
+        return this.bookStoreService.getBookById(id);
     }
 
 
@@ -85,7 +86,7 @@ public class BookStoreController {
      */
     @ApiOperation(value = "Get All Books")
     @GetMapping("/book-list")
-    public List<BookDto> getAllBooks() {
+    public Result<List<BookDto>> getAllBooks() {
         return bookStoreService.getAllBooks();
     }
 

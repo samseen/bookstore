@@ -1,5 +1,6 @@
 package com.samseen.book_store_application.service;
 
+import com.samseen.book_store_application.core.response.Result;
 import com.samseen.book_store_application.dto.BookDto;
 import com.samseen.book_store_application.dto.SalesDto;
 import com.samseen.book_store_application.entity.Book;
@@ -43,7 +44,7 @@ public class BookStoreServiceImpl implements BookStoreService {
      */
     @Override
     @Transactional
-    public void addNewBook(BookDto bookDto) {
+    public Result<BookDto> addNewBook(BookDto bookDto) {
         Optional<Book> bookById = bookRepository.findById(bookDto.getId());
         bookById.ifPresent(book -> {
             throw new DuplicateResourceException("Book with the same Id is already present. " +
@@ -56,6 +57,8 @@ public class BookStoreServiceImpl implements BookStoreService {
         log.info("The data are mapped and ready to save.");
 
         bookRepository.save(book);
+
+        return Result.success(bookDto);
     }
 
     /**
@@ -65,7 +68,7 @@ public class BookStoreServiceImpl implements BookStoreService {
      * @param quantityToAdd
      */
     @Override
-    public void addBook(Long id, int quantityToAdd) {
+    public Result<BookDto> addBook(Long id, int quantityToAdd) {
         //Get the book by id
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException("Book with id:" + id + " is not registered. Use addNewBook to register."));
@@ -75,6 +78,11 @@ public class BookStoreServiceImpl implements BookStoreService {
         book.setTotalCount(totalCountAfterAdd);
 
         bookRepository.save(book);
+
+        //Map book to bookDTO
+        BookDto bookDto = modelMapper.map(book, BookDto.class);
+
+        return Result.success(bookDto);
     }
 
     /**
@@ -84,12 +92,12 @@ public class BookStoreServiceImpl implements BookStoreService {
      * @return bookdto
      */
     @Override
-    public BookDto getBookById(Long id) {
+    public Result<BookDto> getBookById(Long id) {
         //Get the book from repo
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new BookNotFoundException("Book with id:" + id + " is not found."));
 
-        return modelMapper.map(book, BookDto.class);
+        return Result.success(modelMapper.map(book, BookDto.class));
     }
 
 
@@ -99,9 +107,9 @@ public class BookStoreServiceImpl implements BookStoreService {
      * @return List<BookDto>
      */
     @Override
-    public List<BookDto> getAllBooks() {
+    public Result<List<BookDto>> getAllBooks() {
         List<Book> books = bookRepository.findAll();
-        return mapBookListToBookDtoList(books);
+        return Result.success(mapBookListToBookDtoList(books));
     }
 
     /**
