@@ -1,5 +1,6 @@
 package com.samseen.book_store_application.controller;
 
+import com.samseen.book_store_application.config.ApplicationConfig;
 import com.samseen.book_store_application.core.response.Result;
 import com.samseen.book_store_application.dto.BookDto;
 import com.samseen.book_store_application.dto.SalesDto;
@@ -8,8 +9,10 @@ import com.samseen.book_store_application.utils.Category;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +32,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api")
+@Slf4j
 @Api(value = "Bookstore Controller", description = "Bookstore REST Endpoints.")
 public class BookStoreController {
 
@@ -46,6 +50,7 @@ public class BookStoreController {
      */
     @ApiOperation(value = "Add New Book")
     @PostMapping("/add-new-book")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public Result<BookDto> addNewBook(@Valid @RequestBody BookDto bookDto) {
         return this.bookStoreService.addNewBook(bookDto);
@@ -60,6 +65,7 @@ public class BookStoreController {
      */
     @ApiOperation(value = "Add books")
     @PutMapping("/add-book/{id}/{quantityToAdd}")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public Result<BookDto> addBook(@PathVariable Long id,
                         @PathVariable int quantityToAdd) {
@@ -74,6 +80,7 @@ public class BookStoreController {
      */
     @ApiOperation(value = "Get Book By Id")
     @GetMapping("/book/{id}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public Result<BookDto> getBookById(@PathVariable Long id) {
         return this.bookStoreService.getBookById(id);
     }
@@ -86,6 +93,7 @@ public class BookStoreController {
      */
     @ApiOperation(value = "Get All Books")
     @GetMapping("/book-list")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public Result<List<BookDto>> getAllBooks() {
         return bookStoreService.getAllBooks();
     }
@@ -98,6 +106,7 @@ public class BookStoreController {
      */
     @ApiOperation(value = "Get Number of books by Id")
     @GetMapping("/number-of-books/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public int getNumberOfBooksById(@PathVariable Long id) {
         return bookStoreService.getNumberOfBooksById(id);
     }
@@ -107,6 +116,7 @@ public class BookStoreController {
      */
     @ApiOperation(value = "Update a book")
     @PutMapping("/books/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public void updateBook(@PathVariable Long id,
                            @Valid @RequestBody BookDto bookDto) {
@@ -120,6 +130,7 @@ public class BookStoreController {
      */
     @ApiOperation(value = "Sell a book")
     @PutMapping("/sell-book/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public void sellBook(@PathVariable Long id) {
         bookStoreService.sellBook(id);
@@ -133,6 +144,7 @@ public class BookStoreController {
      */
     @ApiOperation(value = "Sell List of Books.")
     @PutMapping("/sell-books")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @ResponseStatus(HttpStatus.OK)
     public void sellBooks(@Valid @RequestBody List<SalesDto> sellDto) {
         bookStoreService.sellBooks(sellDto);
@@ -147,6 +159,7 @@ public class BookStoreController {
      */
     @ApiOperation(value = "Get Book by Category and Keyword")
     @GetMapping("/books")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public List<BookDto> getBookByCategoryKeyWord(@RequestParam String keyword,
                                                   @RequestParam Category category) {
         return bookStoreService.getBookByCategoryKeyWord(keyword, category);
@@ -161,6 +174,7 @@ public class BookStoreController {
      */
     @ApiOperation(value = "Get Number of Books Sold Per Category/Keyword")
     @GetMapping("/number-of-books")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public int getNumberOfBooksSoldByCategoryAndKeyword(@RequestParam String keyword,
                                                         @RequestParam Category category) {
         return bookStoreService.getNumberOfBooksSoldByCategoryAndKeyword(keyword, category);
